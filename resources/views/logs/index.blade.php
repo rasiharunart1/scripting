@@ -23,55 +23,90 @@
             </div>
         @endif
 
-        <!-- Filter Form -->
+        {{-- Filter Form --}}
         <div class="card mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold" style="color:#93c5fd;">
+                    <i class="fas fa-filter mr-2"></i>Filter & Aksi Data
+                </h6>
+            </div>
             <div class="card-body">
-                <form method="GET" class="row align-items-end">
-                    <div class="col-md-2">
-                        <label for="start_date" class="form-label">Tanggal Mulai:</label>
-                        <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
-                            class="form-control">
+                <form method="GET" id="filter-form">
+                    {{-- Row 1: Filter Inputs --}}
+                    <div class="row align-items-end mb-3">
+                        <div class="col-md-3">
+                            <label for="start_date" class="form-label">
+                                <i class="fas fa-calendar-alt mr-1"></i>Tanggal Mulai
+                            </label>
+                            <input type="date" name="start_date" id="start_date"
+                                value="{{ $startDate }}" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_date" class="form-label">
+                                <i class="fas fa-calendar-alt mr-1"></i>Tanggal Selesai
+                            </label>
+                            <input type="date" name="end_date" id="end_date"
+                                value="{{ $endDate }}" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="per_page" class="form-label">
+                                <i class="fas fa-list-ol mr-1"></i>Data per Halaman
+                            </label>
+                            <select name="per_page" id="per_page" class="form-control">
+                                <option value="10"  {{ request('per_page', 10) == 10  ? 'selected' : '' }}>10</option>
+                                <option value="25"  {{ request('per_page', 10) == 25  ? 'selected' : '' }}>25</option>
+                                <option value="50"  {{ request('per_page', 10) == 50  ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                                <option value="500" {{ request('per_page', 10) == 500 ? 'selected' : '' }}>500</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end" style="gap:8px;">
+                            <button type="submit" class="btn btn-primary flex-fill">
+                                <i class="fas fa-search mr-1"></i>Terapkan Filter
+                            </button>
+                            <a href="{{ route('logs.index') }}" class="btn btn-secondary flex-fill">
+                                <i class="fas fa-redo mr-1"></i>Reset Filter
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <label for="end_date" class="form-label">Tanggal Selesai:</label>
-                        <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
-                            class="form-control">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="per_page" class="form-label">Data per Halaman:</label>
-                        <select name="per_page" id="per_page" class="form-control">
-                            <option value="10" {{ request('per_page', 10) == 10 ?  'selected' : '' }}>10</option>
-                            <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-                            <option value="500" {{ request('per_page', 10) == 500 ?  'selected' : '' }}>500</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary mr-2">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <a href="{{ route('logs.export', request()->all()) }}" class="btn btn-success mr-2">
-                            <i class="fas fa-file-excel"></i> Export Excel
-                        </a>
-                        <a href="{{ route('logs.exportAll', $deviceId) }}" class="btn btn-warning mr-2">
-                            <i class="fas fa-file-excel"></i> Export All Data
-                        </a>
-                        <button type="button" class="btn btn-danger" id="delete-logs-btn">
-                            <i class="fas fa-trash"></i> Hapus Data
-                        </button>
-                        
-                        <button type="button" class="btn btn-danger" id="delete-logs-all-btn">
-                            <i class="fas fa-trash"></i> Reset All Log
-                        </button>
-                        
-                        <a href="{{ route('logs.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-redo"></i> Reset Filter
-                        </a>
+
+                    {{-- Row 2: Export & Danger Actions --}}
+                    <div class="row" style="gap:0;">
+                        {{-- Export group --}}
+                        <div class="col-md-6">
+                            <p class="mb-1" style="font-size:.72rem;font-weight:600;color:rgba(147,197,253,0.7);letter-spacing:.5px;text-transform:uppercase;">
+                                <i class="fas fa-download mr-1"></i>Export Data
+                            </p>
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('logs.export', request()->all()) }}"
+                                   class="btn btn-success btn-sm">
+                                    <i class="fas fa-file-excel mr-1"></i>Export Filtered
+                                </a>
+                                <a href="{{ route('logs.exportAll', $deviceId) }}"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-file-excel mr-1"></i>Export Semua
+                                </a>
+                            </div>
+                        </div>
+                        {{-- Danger group --}}
+                        <div class="col-md-6 text-md-right">
+                            <p class="mb-1" style="font-size:.72rem;font-weight:600;color:rgba(248,113,113,0.7);letter-spacing:.5px;text-transform:uppercase;">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>Hapus Data
+                            </p>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-danger btn-sm" id="delete-logs-btn">
+                                    <i class="fas fa-trash mr-1"></i>Hapus Filtered
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" id="delete-logs-all-btn">
+                                    <i class="fas fa-bomb mr-1"></i>Reset Semua
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
+
 
         <!-- Data Table -->
         <div class="card">

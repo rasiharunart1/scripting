@@ -40,9 +40,12 @@
 
                     <div class="form-group">
                         <label for="password" class="form-label">{{ __('Password') }}</label>
+                        <!-- Hidden username field for accessibility/password managers -->
+                        <input type="text" name="username" value="{{ Auth::user()->email }}" autocomplete="username" class="d-none">
                         <input type="password"
                             class="form-control @error('password', 'userDeletion') is-invalid @enderror" id="password"
-                            name="password" placeholder="{{ __('Enter your password to confirm') }}" required>
+                            name="password" placeholder="{{ __('Enter your password to confirm') }}" 
+                            autocomplete="current-password" required>
                         @error('password', 'userDeletion')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

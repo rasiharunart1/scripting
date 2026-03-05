@@ -784,35 +784,8 @@
     }
 
     function showAlertNotification(sensorKey, value, alertType, unit) {
-        const sensorName = sensorKey.replace(/_/g, ' ').toUpperCase();
-        const range = ranges[sensorKey];
-        
-        const toastHtml = `
-            <div class="toast alert-toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
-                <div class="toast-header bg-danger text-white">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    <strong class="mr-auto">Sensor Alert!</strong>
-                    <small class="text-white-50">just now</small>
-                    <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    <strong>${sensorName}</strong> is <span class="badge badge-${alertType === 'HIGH' ? 'danger' : 'warning'}">${alertType}</span><br>
-                    Current: <strong class="text-danger">${value.toFixed(2)} ${unit}</strong><br>
-                    Normal Range: ${range.min} - ${range.max} ${unit}
-                </div>
-            </div>
-        `;
-        
-        const container = $('#toast-container');
-        const toast = $(toastHtml);
-        container.append(toast);
-        toast.toast('show');
-        
-        toast.on('hidden.bs.toast', function() {
-            $(this).remove();
-        });
+        // Alert popup dinonaktifkan – indikator blink di card sudah cukup
+        return;
     }
 
     // Sensor Update Functions

@@ -159,7 +159,28 @@
         </li> --}}
 
 
-
     </ul>
+
+    {{-- User info section on the right --}}
+    <div class="d-none d-md-flex align-items-center ml-3" style="gap:10px;">
+        <div style="text-align:right;">
+            <div style="font-size:.78rem;font-weight:700;color:#e8f0fe;line-height:1.2;">
+                {{ Auth::user()->name ?? 'User' }}
+            </div>
+            <div style="font-size:.65rem;color:rgba(147,197,253,0.7);letter-spacing:.5px;text-transform:uppercase;">
+                {{ Auth::user()->role ?? 'Operator' }}
+            </div>
+        </div>
+        <div style="
+            width:36px;height:36px;border-radius:50%;
+            background:linear-gradient(135deg,#2563eb,#0ea5e9);
+            display:flex;align-items:center;justify-content:center;
+            font-weight:800;font-size:.85rem;color:#fff;
+            box-shadow:0 0 12px rgba(37,99,235,0.5);
+            flex-shrink:0;
+        ">
+            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+        </div>
+    </div>
 
 </nav>
