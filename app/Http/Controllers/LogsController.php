@@ -91,7 +91,7 @@ class LogsController extends Controller
         $request->validate([
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'per_page' => ['nullable', 'integer', 'min:10', 'max:1000'],
+            'per_page' => ['nullable', 'integer', 'min:5', 'max:1000'],
         ]);
 
         $user = Auth::user();
@@ -107,10 +107,10 @@ class LogsController extends Controller
         }
 
         // Default per page
-        $perPage = $request->query('per_page', 50);
+        $perPage = $request->query('per_page', 10);
         
         // Validate per_page value
-        $perPage = in_array($perPage, [10, 25, 50, 100, 500, 1000]) ? $perPage : 50;
+        $perPage = in_array($perPage, [5,10, 25, 50, 100, 500, 1000]) ? $perPage : 50;
 
         $error = null;
         $logs = collect();

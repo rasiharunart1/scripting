@@ -150,7 +150,7 @@ public function getSensorData($deviceCode)
 
         $sensorData = $device->SensorDataStill()->latest()->first();
 
-        if($rangeSensor->isEmpty()){
+        if(!$sensorData){
             return response()->json([
                 'success'=> false,
                 'message'=> 'Data sensor tidak ditemukan untuk device ini'
@@ -204,7 +204,7 @@ public function getSensorData($deviceCode)
 
         $sensorData = $device->SensorData()->get();
 
-        if($rangeSensor->isEmpty()){
+        if($sensorData->isEmpty()){
             return response()->json([
                 'success'=> false,
                 'message'=> 'Data sensor tidak ditemukan untuk device ini'

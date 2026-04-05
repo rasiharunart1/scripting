@@ -51,19 +51,19 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0 text-gray-800">Dashboard Monitoring PLTS</h1>
             
-            <div class="d-flex align-items-center">
-                <div id="connection-indicator" class="badge badge-secondary mr-2">
-                    <span id="connection-dot">●</span>
-                    <span id="connection-text">Connecting...</span>
-                </div>
+            <!--<div class="d-flex align-items-center">-->
+            <!--    <div id="connection-indicator" class="badge badge-secondary mr-2">-->
+            <!--        <span id="connection-dot">●</span>-->
+            <!--        <span id="connection-text">Connecting...</span>-->
+            <!--    </div>-->
                 
-                <div id="alert-summary" class="d-none">
-                    <span class="badge badge-danger p-2">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span id="alert-count">0</span> Alert(s)
-                    </span>
-                </div>
-            </div>
+            <!--    <div id="alert-summary" class="d-none">-->
+            <!--        <span class="badge badge-danger p-2">-->
+            <!--            <i class="fas fa-exclamation-triangle mr-1"></i>-->
+            <!--            <span id="alert-count">0</span> Alert(s)-->
+            <!--        </span>-->
+            <!--    </div>-->
+            <!--</div>-->
         </div>
 
         <div class="row">
@@ -102,7 +102,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Fan 1 Status
+                                    Fan 1 Status (Kipas PLTS)
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <span id="fan1_badge" class="badge {{ $fan1On ? 'badge-success' : 'badge-secondary' }}">
@@ -127,7 +127,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Fan 2 Status
+                                    Fan 2 Status (Kipas RouterBoard)
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <span id="fan2_badge" class="badge {{ $fan2On ? 'badge-success' : 'badge-secondary' }}">
@@ -437,46 +437,46 @@
                 $serverVoltAlert = is_alert('server_voltage', $serverVoltVal, $ranges);
                 $serverVoltAlertType = get_alert_type('server_voltage', $serverVoltVal, $ranges);
             @endphp
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card shadow h-100 py-2 sensor-card {{ $serverVoltAlert ? 'sensor-alert sensor-alert-pulse border-left-danger' : 'border-left-success' }}"
-                     id="card_server_voltage"
-                     data-sensor="server_voltage">
-                    <div class="card-body">
-                        <button class="btn btn-sm btn-link position-absolute settings-btn" 
-                                style="top: 5px; right: 5px; z-index: 10; color: #858796; padding: 2px 6px;"
-                                onclick="openSettingsModal('server_voltage')"
-                                title="Configure Alert Range">
-                            <i class="fas fa-cog"></i>
-                        </button>
+            <!--<div class="col-xl-3 col-md-6 mb-4">-->
+            <!--    <div class="card shadow h-100 py-2 sensor-card {{ $serverVoltAlert ? 'sensor-alert sensor-alert-pulse border-left-danger' : 'border-left-success' }}"-->
+            <!--         id="card_server_voltage"-->
+            <!--         data-sensor="server_voltage">-->
+            <!--        <div class="card-body">-->
+            <!--            <button class="btn btn-sm btn-link position-absolute settings-btn" -->
+            <!--                    style="top: 5px; right: 5px; z-index: 10; color: #858796; padding: 2px 6px;"-->
+            <!--                    onclick="openSettingsModal('server_voltage')"-->
+            <!--                    title="Configure Alert Range">-->
+            <!--                <i class="fas fa-cog"></i>-->
+            <!--            </button>-->
                         
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold {{ $serverVoltAlert ? 'text-danger' : 'text-success' }} text-uppercase mb-1">
-                                    Server Voltage
-                                    <i class="fas fa-exclamation-triangle alert-icon {{ $serverVoltAlert ? '' : 'd-none' }}"></i>
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold {{ $serverVoltAlert ? 'sensor-value-danger' : 'text-gray-800' }}" id="server_voltage">
-                                    {{ number_format($serverVoltVal, 2) }} V
-                                    @if($serverVoltAlert)
-                                        <span class="badge badge-danger alert-badge">{{ $serverVoltAlertType }}</span>
-                                    @endif
-                                </div>
-                                <div class="text-xs text-muted mt-1" id="range_server_voltage">
-                                    Range: <span class="range-min">{{ $ranges['server_voltage']['min'] }}</span>V - <span class="range-max">{{ $ranges['server_voltage']['max'] }}</span>V
-                                </div>
-                                <div class="progress progress-sm mt-2">
-                                    <div class="progress-bar {{ $serverVoltAlert ? 'bg-danger' : 'bg-success' }}" 
-                                         id="server_voltage_bar"
-                                         style="width: {{ $serverVoltPct }}%"></div>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-server fa-2x {{ $serverVoltAlert ? 'text-danger' : 'text-gray-300' }}"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--            <div class="row no-gutters align-items-center">-->
+            <!--                <div class="col mr-2">-->
+            <!--                    <div class="text-xs font-weight-bold {{ $serverVoltAlert ? 'text-danger' : 'text-success' }} text-uppercase mb-1">-->
+            <!--                        Server Voltage-->
+            <!--                        <i class="fas fa-exclamation-triangle alert-icon {{ $serverVoltAlert ? '' : 'd-none' }}"></i>-->
+            <!--                    </div>-->
+            <!--                    <div class="h5 mb-0 font-weight-bold {{ $serverVoltAlert ? 'sensor-value-danger' : 'text-gray-800' }}" id="server_voltage">-->
+            <!--                        {{ number_format($serverVoltVal, 2) }} V-->
+            <!--                        @if($serverVoltAlert)-->
+            <!--                            <span class="badge badge-danger alert-badge">{{ $serverVoltAlertType }}</span>-->
+            <!--                        @endif-->
+            <!--                    </div>-->
+            <!--                    <div class="text-xs text-muted mt-1" id="range_server_voltage">-->
+            <!--                        Range: <span class="range-min">{{ $ranges['server_voltage']['min'] }}</span>V - <span class="range-max">{{ $ranges['server_voltage']['max'] }}</span>V-->
+            <!--                    </div>-->
+            <!--                    <div class="progress progress-sm mt-2">-->
+            <!--                        <div class="progress-bar {{ $serverVoltAlert ? 'bg-danger' : 'bg-success' }}" -->
+            <!--                             id="server_voltage_bar"-->
+            <!--                             style="width: {{ $serverVoltPct }}%"></div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="col-auto">-->
+            <!--                    <i class="fas fa-server fa-2x {{ $serverVoltAlert ? 'text-danger' : 'text-gray-300' }}"></i>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
         </div>
     </div>
 
@@ -624,12 +624,10 @@
 
 @push('scripts')
 <script>
-    // Configuration
-    const UPDATE_INTERVAL = 1000; // 2 detik
+    const UPDATE_INTERVAL = 1000;
     const MAX_CONSECUTIVE_ERRORS = 3;
-    const RETRY_DELAY = 10000; // 10 detik
+    const RETRY_DELAY = 10000;
 
-    // Global Variables
     let ranges = {};
     let activeAlerts = {};
     let updateInterval = null;
@@ -639,7 +637,6 @@
     let alertsEnabled = true;
     let soundEnabled = false;
 
-    // Constants
     const originalColors = {
         battery_a: { border: 'border-left-primary', bar: 'bg-primary', text: 'text-primary' },
         battery_b: { border: 'border-left-primary', bar: 'bg-primary', text: 'text-primary' },
@@ -673,7 +670,6 @@
         server_voltage: 'Server Voltage',
     };
 
-    // Utility Functions
     function clamp(v, lo, hi) {
         return Math.max(lo, Math.min(hi, v));
     }
@@ -704,7 +700,6 @@
         return s === '1' || s === 'on' || s === 'true' || s === 'yes';
     }
 
-    // Connection Indicator
     function updateConnectionIndicator(status) {
         const indicator = $('#connection-indicator');
         const dot = $('#connection-dot');
@@ -735,7 +730,6 @@
         }
     }
 
-    // Alert Functions
     function initAlertSound() {
         if (soundEnabled) {
             try {
@@ -755,7 +749,7 @@
                     }
                 };
             } catch (e) {
-                console.warn('Web Audio API not supported');
+                // Web Audio API not supported
             }
         }
     }
@@ -765,7 +759,7 @@
             try {
                 alertSound.play();
             } catch (e) {
-                console.warn('Audio play failed:', e);
+                // ignore
             }
         }
     }
@@ -788,13 +782,9 @@
         return;
     }
 
-    // Sensor Update Functions
     function updateSensorAlert(sensorKey, value) {
         const card = $(`#card_${sensorKey}`);
-        if (!card.length) {
-            console.warn(`Card not found for sensor: ${sensorKey}`);
-            return;
-        }
+        if (!card.length) return;
 
         const valueEl = $(`#${sensorKey}`);
         const barEl = $(`#${sensorKey}_bar`);
@@ -805,10 +795,7 @@
         const colors = originalColors[sensorKey];
         const range = ranges[sensorKey];
         
-        if (!range) {
-            console.warn(`Range not found for sensor: ${sensorKey}`);
-            return;
-        }
+        if (!range) return;
         
         const isAlert = isOutOfRange(sensorKey, value);
         const alertType = getAlertType(sensorKey, value);
@@ -864,14 +851,8 @@
         }
     }
 
-    // Main Update Function
     function updateDashboard() {
-        console.log('🔄 updateDashboard() called at', new Date().toLocaleTimeString());
-        
-        if (isUpdating) {
-            console.log('⚠️ Already updating, skipping...');
-            return;
-        }
+        if (isUpdating) return;
 
         isUpdating = true;
         updateConnectionIndicator('updating');
@@ -884,19 +865,16 @@
             cache: false,
             
             success: function(response) {
-                console.log('✅ Response received:', response);
                 consecutiveErrors = 0;
                 updateConnectionIndicator('connected');
 
                 if (response.data) {
-                    // Update Batteries
                     ['a', 'b', 'c', 'd'].forEach(function(batt) {
                         const key = 'battery_' + batt;
                         const value = parseFloat(response.data[key]) || 0;
                         updateSensorAlert(key, value);
                     });
 
-                    // Update PLN
                     const plnVolt = parseFloat(response.data.pln_volt) || 0;
                     const plnCurrent = parseFloat(response.data.pln_current) || 0;
                     const plnPower = parseFloat(response.data.pln_power) || 0;
@@ -905,21 +883,18 @@
                     updateSensorAlert('pln_current', plnCurrent);
                     updateSensorAlert('pln_power', plnPower);
 
-                    // Update Temperatures
                     const temp1 = parseFloat(response.data.temperature_1) || 0;
                     const temp2 = parseFloat(response.data.temperature_2) || 0;
 
                     updateSensorAlert('temperature_1', temp1);
                     updateSensorAlert('temperature_2', temp2);
 
-                    // Update Fans
                     const fan1On = toOnOff(response.data.relay_1 ?? response.relay_1);
                     const fan2On = toOnOff(response.data.relay_2 ?? response.relay_2);
                     
                     setFanUI(1, fan1On);
                     setFanUI(2, fan2On);
 
-                    // Update Device Status
                     if (response.device_status) {
                         const statusBadge = $('#device_status');
                         statusBadge.text(response.device_status);
@@ -932,25 +907,19 @@
                     }
                 }
 
-                // Update Server Voltage
                 if (response.server_data) {
                     const serverVolt = parseFloat(response.server_data.server_voltage) || 0;
                     updateSensorAlert('server_voltage', serverVolt);
                 }
             },
             
-            error: function(xhr, status, error) {
-                console.error('❌ AJAX Error:', {status, error, response: xhr.responseText});
+            error: function() {
                 consecutiveErrors++;
                 updateConnectionIndicator('error');
 
                 if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
-                    console.error('🛑 Max errors reached, pausing updates...');
                     stopUpdates();
-                    
-                    console.log(`⏰ Will retry in ${RETRY_DELAY/1000} seconds...`);
-                    setTimeout(() => {
-                        console.log('🔄 Restarting updates...');
+                    setTimeout(function() {
                         consecutiveErrors = 0;
                         startUpdates();
                     }, RETRY_DELAY);
@@ -963,10 +932,7 @@
         });
     }
 
-    // Load Ranges from Database
     async function loadRanges() {
-        console.log('📊 Loading ranges from database...');
-        
         try {
             const response = await $.ajax({
                 url: '/sensor-ranges',
@@ -974,21 +940,14 @@
                 dataType: 'json',
                 cache: false
             });
-            
-            console.log('✅ Ranges loaded:', response);
-            
+
             if (response.success && response.data) {
                 ranges = response.data;
                 updateDisplayedRanges();
-                console.log('📋 Active ranges:', ranges);
                 return true;
-            } else {
-                console.error('❌ Failed to load ranges');
-                return false;
             }
-            
-        } catch (error) {
-            console.error('❌ Error loading ranges:', error);
+            return false;
+        } catch (e) {
             return false;
         }
     }
@@ -1003,7 +962,6 @@
         });
     }
 
-    // Settings Modal Functions
     window.openSettingsModal = function(sensorKey) {
         $('#settings_sensor_key').val(sensorKey);
         $('#settings_sensor_name').text(sensorNames[sensorKey] || sensorKey);
@@ -1127,12 +1085,8 @@
         });
     }
 
-    // Update Control Functions
     function startUpdates() {
-        if (updateInterval) {
-            clearInterval(updateInterval);
-        }
-        console.log(`🚀 Starting updates with ${UPDATE_INTERVAL}ms interval`);
+        if (updateInterval) clearInterval(updateInterval);
         updateDashboard();
         updateInterval = setInterval(updateDashboard, UPDATE_INTERVAL);
     }
@@ -1141,48 +1095,25 @@
         if (updateInterval) {
             clearInterval(updateInterval);
             updateInterval = null;
-            console.log('⏸️ Updates stopped');
         }
     }
 
-    // Page Visibility Handler
     function handleVisibilityChange() {
         if (document.hidden) {
-            console.log('👁️ Page hidden, stopping updates');
             stopUpdates();
         } else {
-            console.log('👁️ Page visible, resuming updates');
             startUpdates();
         }
     }
 
-    // Initialize on Document Ready
     $(document).ready(async function() {
-        console.log('🚀 Dashboard initializing...');
-        console.log('jQuery version:', $.fn.jquery);
-        
-        // Load ranges first
-        const rangesLoaded = await loadRanges();
-        
-        if (!rangesLoaded) {
-            console.error('❌ Failed to load ranges, but continuing anyway...');
-        }
-        
-        // Initialize alert sound
+        await loadRanges();
         initAlertSound();
-        
-        // Start updates
         startUpdates();
-
-        // Handle page visibility
         document.addEventListener('visibilitychange', handleVisibilityChange);
-        
-        console.log('✅ Dashboard initialized successfully!');
     });
 
-    // Cleanup on page unload
     $(window).on('beforeunload', function() {
-        console.log('👋 Page unloading, cleaning up...');
         stopUpdates();
     });
 </script>

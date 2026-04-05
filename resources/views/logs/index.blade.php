@@ -53,6 +53,8 @@
                                 <i class="fas fa-list-ol mr-1"></i>Data per Halaman
                             </label>
                             <select name="per_page" id="per_page" class="form-control">
+                                
+                                <option value="5"  {{ request('per_page', 5) == 5  ? 'selected' : '' }}>5</option>
                                 <option value="10"  {{ request('per_page', 10) == 10  ? 'selected' : '' }}>10</option>
                                 <option value="25"  {{ request('per_page', 10) == 25  ? 'selected' : '' }}>25</option>
                                 <option value="50"  {{ request('per_page', 10) == 50  ? 'selected' : '' }}>50</option>
