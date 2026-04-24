@@ -15,6 +15,7 @@ class SetHysteresis extends Command
                             {--start : Mulai eksperimen dari hari ini (step 1)}
                             {--status : Tampilkan status eksperimen saat ini}
                             {--reset : reset nilai step hysteresis}
+                            {--prev : Kembali ke step sebelumnya (mundur 1 hari)}
                             {--device= : Device code tertentu. Default: semua device}';
 
     protected $description = 'Update nilai hysteresis device sesuai jadwal eksperimen harian';
@@ -37,6 +38,11 @@ class SetHysteresis extends Command
         if ($this->option('step')) {
             return $this->setStep((int) $this->option('step'));
         }
+
+        if ($this->option('prev')) {
+            return $this->previousStep();
+        }
+
         if($this->option('reset')){
             return $this->resetStep();
         }
@@ -69,10 +75,10 @@ class SetHysteresis extends Command
         $startDate = Carbon::parse($state['start_date']);
         $today = Carbon::today();
 
-        $dayNumber = $startDate->diffInDays($today) + 1;
+        $dayNumber = (int) ($startDate->diffInDays($today) + 1);
 
         if ($dayNumber > count(self::HYSTERESIS_STEPS)) {
-            $this->warn("Eksperimen sudah selesai (hari ke-{$dayNumber} dari 10).");
+            $this->warn("Eksperimen sudah selesai (hari ke-{$dayNumber} dari " . count(self::HYSTERESIS_STEPS) . ").");
             return 0;
         }
 
@@ -82,8 +88,9 @@ class SetHysteresis extends Command
 
     private function setStep(int $step): int
     {
-        if ($step < 1 || $step > count(self::HYSTERESIS_STEPS)) {
-            $this->error('Step harus antara 1 dan ' . count(self::HYSTERESIS_STEPS));
+        $maxStep = count(self::HYSTERESIS_STEPS);
+        if ($step < 1 || $step > $maxStep) {
+            $this->error("Step harus antara 1 dan {$maxStep}");
             return 1;
         }
 
@@ -91,8 +98,35 @@ class SetHysteresis extends Command
             ? json_decode(Storage::get(self::STATE_FILE), true)
             : ['start_date' => Carbon::today()->toDateString(), 'history' => []];
 
+        // Sesuaikan start_date agar jadwal harian besok tetap sinkron
+        $state['start_date'] = Carbon::today()->copy()->subDays($step - 1)->toDateString();
         $state['current_step'] = $step;
         return $this->applyHysteresis($step, $state);
+    }
+
+    private function previousStep(): int
+    {
+        if (!Storage::exists(self::STATE_FILE)) {
+            $this->error('Eksperimen belum dimulai.');
+            return 1;
+        }
+
+        $state = json_decode(Storage::get(self::STATE_FILE), true);
+        $currentStep = $state['current_step'] ?? 1;
+
+        if ($currentStep <= 1) {
+            $this->warn('Sudah berada di step pertama (1). Tidak bisa mundur lagi.');
+            return 0;
+        }
+
+        $prevStep = $currentStep - 1;
+
+        // Majukan start_date 1 hari agar scheduler besok tidak loncat ke depan
+        $state['start_date'] = Carbon::parse($state['start_date'])->addDay()->toDateString();
+        $state['current_step'] = $prevStep;
+
+        $this->info("Mundur ke step sebelumnya: {$prevStep}");
+        return $this->applyHysteresis($prevStep, $state);
     }
 
     private function applyHysteresis(int $step, array $state): int
@@ -146,7 +180,7 @@ class SetHysteresis extends Command
         $state = json_decode(Storage::get(self::STATE_FILE), true);
         $startDate = Carbon::parse($state['start_date']);
         $today = Carbon::today();
-        $dayNumber = $startDate->diffInDays($today) + 1;
+        $dayNumber = (int) ($startDate->diffInDays($today) + 1);
 
         $this->line('');
         $this->info('=== Status Eksperimen Hysteresis ===');
