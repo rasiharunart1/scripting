@@ -9,9 +9,22 @@ use Illuminate\Support\Facades\Validator;
 
 class SensorRangeController extends Controller
 {
+    /** Default ranges (sama dengan yang ada di JS dan PHP blade) */
+    private const DEFAULTS = [
+        'battery_a'     => ['min' => 10.5, 'max' => 14.4],
+        'battery_b'     => ['min' => 10.5, 'max' => 14.4],
+        'battery_c'     => ['min' => 10.5, 'max' => 14.4],
+        'battery_d'     => ['min' => 10.5, 'max' => 14.4],
+        'pln_volt'      => ['min' => 180,  'max' => 240  ],
+        'pln_current'   => ['min' => 0,    'max' => 32   ],
+        'pln_power'     => ['min' => 0,    'max' => 100  ],
+        'temperature_1' => ['min' => 0,    'max' => 60   ],
+        'temperature_2' => ['min' => 0,    'max' => 60   ],
+        'server_voltage'=> ['min' => 170,  'max' => 260  ],
+    ];
     public function index()
     {
-        $ranges = Auth::user()->sensorRanges()
+        $dbRanges = Auth::user()->sensorRanges()
             ->get()
             ->keyBy('sensor_key')
             ->map(function ($range) {
@@ -19,11 +32,15 @@ class SensorRangeController extends Controller
                     'min' => $range->min_value,
                     'max' => $range->max_value,
                 ];
-            });
+            })
+            ->toArray();
+
+        // Merge: default selalu ada, di-override oleh nilai dari DB
+        $ranges = array_merge(self::DEFAULTS, $dbRanges);
 
         return response()->json([
             'success' => true,
-            'data' => $ranges
+            'data'    => $ranges
         ]);
     }
 
@@ -80,9 +97,13 @@ class SensorRangeController extends Controller
             ->where('sensor_key', $request->sensor_key)
             ->delete();
 
+        // Kembalikan default value agar frontend bisa update UI
+        $default = self::DEFAULTS[$request->sensor_key] ?? ['min' => 0, 'max' => 100];
+
         return response()->json([
             'success' => true,
-            'message' => 'Settings reset to default'
+            'message' => 'Settings reset to default',
+            'data'    => $default,
         ]);
     }
 

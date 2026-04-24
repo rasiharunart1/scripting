@@ -628,7 +628,22 @@
     const MAX_CONSECUTIVE_ERRORS = 3;
     const RETRY_DELAY = 10000;
 
-    let ranges = {};
+    // Default ranges — dipakai sebagai fallback jika DB belum ada data
+    const DEFAULT_RANGES = {
+        battery_a:   { min: 10.5, max: 14.4 },
+        battery_b:   { min: 10.5, max: 14.4 },
+        battery_c:   { min: 10.5, max: 14.4 },
+        battery_d:   { min: 10.5, max: 14.4 },
+        pln_volt:    { min: 180,  max: 240   },
+        pln_current: { min: 0,    max: 32    },
+        pln_power:   { min: 0,    max: 100   },
+        temperature_1: { min: 0,  max: 60    },
+        temperature_2: { min: 0,  max: 60    },
+        server_voltage: { min: 170, max: 260 },
+    };
+
+    // ranges dimulai dari default, lalu di-override dari DB
+    let ranges = Object.assign({}, DEFAULT_RANGES);
     let activeAlerts = {};
     let updateInterval = null;
     let isUpdating = false;
@@ -942,12 +957,16 @@
             });
 
             if (response.success && response.data) {
-                ranges = response.data;
+                // Merge: default ranges tetap ada, di-override oleh nilai dari DB
+                ranges = Object.assign({}, DEFAULT_RANGES, response.data);
                 updateDisplayedRanges();
                 return true;
             }
+            // DB kosong → tetap pakai DEFAULT_RANGES yang sudah diset
             return false;
         } catch (e) {
+            // Gagal request → tetap pakai DEFAULT_RANGES
+            console.warn('Gagal load ranges dari DB, menggunakan default ranges.');
             return false;
         }
     }
