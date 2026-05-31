@@ -151,8 +151,7 @@
                             <th>PLN Power (W)</th>
                             <th>Relay 1</th>
                             <th>Relay 2</th>
-                            <!-- Tambahan kolom baru -->
-                            <!--<th>Server Volt (V)</th>-->
+                            <th>Charging</th>
                             <th>Temp1 Threshold</th>
                             <th>Temp2 Threshold</th>
                             <th>Hysteresis</th>
@@ -175,14 +174,19 @@
                                 <td>{{ number_format($log->power, 2) }}</td>
                                 <td>{{ $log->relay_1 }}</td>
                                 <td>{{ $log->relay_2 }}</td>
-                                <!-- Tambahan data baru -->
-                                <!--<td>{{ $log->server_voltage ? number_format($log->server_voltage, 2) : '-' }}</td>-->
+                                <td>
+                                    @if($log->relay_charger)
+                                        <span class="badge badge-success">ON</span>
+                                    @else
+                                        <span class="badge badge-secondary">OFF</span>
+                                    @endif
+                                </td>
                                 <td>{{ $log->temp1_threshold ? number_format($log->temp1_threshold, 2) : '-' }}</td>
                                 <td>{{ $log->temp2_threshold ? number_format($log->temp2_threshold, 2) : '-' }}</td>
                                 <td>{{ $log->hysteresis ? number_format($log->hysteresis, 2) : '-' }}</td>
                             </tr>
                         @empty
-                            <td colspan="18" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="19" class="text-center">Tidak ada data yang tersedia</td>
                         @endforelse
                     </tbody>
                     </table>

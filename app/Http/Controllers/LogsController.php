@@ -144,10 +144,11 @@ class LogsController extends Controller
                         'pln_power as power',
                         'relay_1',
                         'relay_2',
+                        'relay_charger',
                         'timeDevice',
-                        'temp1_threshold',     // Tambahan
-                        'temp2_threshold',     // Tambahan
-                        'hysteresis', 
+                        'temp1_threshold',
+                        'temp2_threshold',
+                        'hysteresis',
                         'created_at',
                     ]);
 

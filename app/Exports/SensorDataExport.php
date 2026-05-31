@@ -42,6 +42,7 @@ class SensorDataExport implements FromQuery, WithHeadings, WithMapping, WithColu
                 'pln_power',
                 'relay_1',
                 'relay_2',
+                'relay_charger',
                 'temp1_threshold',
                 'temp2_threshold',
                 'hysteresis',
@@ -65,6 +66,7 @@ class SensorDataExport implements FromQuery, WithHeadings, WithMapping, WithColu
             'PLN Power (W)',
             'Relay 1',
             'Relay 2',
+            'Charging (0/1)',
             'Temp 1 Thresh (°C)',
             'Temp 2 Thresh (°C)',
             'Hysteresis (°C)',
@@ -90,8 +92,9 @@ class SensorDataExport implements FromQuery, WithHeadings, WithMapping, WithColu
             (float) ($row->pln_volt ?? 0),
             (float) ($row->pln_current ?? 0),
             (float) ($row->pln_power ?? 0),
-            (int) ($row->relay_1 ?? 0),
-            (int) ($row->relay_2 ?? 0),
+            (int)   ($row->relay_1 ?? 0),
+            (int)   ($row->relay_2 ?? 0),
+            (int)   ($row->relay_charger ?? 0),
             (float) ($row->temp1_threshold ?? 0),
             (float) ($row->temp2_threshold ?? 0),
             (float) ($row->hysteresis ?? 0),
@@ -115,9 +118,10 @@ class SensorDataExport implements FromQuery, WithHeadings, WithMapping, WithColu
             'L' => NumberFormat::FORMAT_NUMBER_00,
             'M' => NumberFormat::FORMAT_NUMBER,
             'N' => NumberFormat::FORMAT_NUMBER,
-            'O' => NumberFormat::FORMAT_NUMBER_00,
-            'P' => NumberFormat::FORMAT_NUMBER_00,
-            'Q' => NumberFormat::FORMAT_NUMBER_00,
+            'O' => NumberFormat::FORMAT_NUMBER,   // relay_charger
+            'P' => NumberFormat::FORMAT_NUMBER_00, // temp1_threshold
+            'Q' => NumberFormat::FORMAT_NUMBER_00, // temp2_threshold
+            'R' => NumberFormat::FORMAT_NUMBER_00, // hysteresis
         ];
     }
     
