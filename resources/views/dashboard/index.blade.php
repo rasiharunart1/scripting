@@ -148,7 +148,58 @@
         </div>
 
         <div class="row">
-            @foreach (['a', 'b', 'c', 'd'] as $batt)
+             @foreach (['b'] as $batt)
+                @php
+                    $key = 'battery_'.$batt;
+                    $val = (float) ($latestData?->{$key} ?? 0);
+                    $pct = sensor_pct($key, $val, $ranges);
+                    $range = $ranges[$key];
+                    $isAlert = is_alert($key, $val, $ranges);
+                    $alertType = get_alert_type($key, $val, $ranges);
+                @endphp
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100 py-2 sensor-card {{ $isAlert ? 'sensor-alert sensor-alert-pulse border-left-danger' : 'border-left-primary' }}" 
+                         id="card_battery_{{ $batt }}" 
+                         data-sensor="battery_{{ $batt }}">
+                        <div class="card-body">
+                            <button class="btn btn-sm btn-link position-absolute settings-btn" 
+                                    style="top: 5px; right: 5px; z-index: 10; color: #858796; padding: 2px 6px;"
+                                    onclick="openSettingsModal('battery_{{ $batt }}')"
+                                    title="Configure Alert Range">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold {{ $isAlert ? 'text-danger' : 'text-primary' }} text-uppercase mb-1">
+                                        Charger Battery A
+                                        <i class="fas fa-exclamation-triangle alert-icon {{ $isAlert ? '' : 'd-none' }}"></i>
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold {{ $isAlert ? 'sensor-value-danger' : 'text-gray-800' }}" id="battery_{{ $batt }}">
+                                        {{ number_format($val, 2) }} V
+                                        @if($isAlert)
+                                            <span class="badge badge-danger alert-badge">{{ $alertType }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="text-xs text-muted mt-1" id="range_battery_{{ $batt }}">
+                                        Range: <span class="range-min">{{ $range['min'] }}</span>V - <span class="range-max">{{ $range['max'] }}</span>V
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="progress progress-sm mr-2" style="width: 90px;">
+                                        <div class="progress-bar {{ $isAlert ? 'bg-danger' : 'bg-primary' }}" 
+                                             id="battery_{{ $batt }}_bar"
+                                             style="width: {{ $pct }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class=row>
+            @endforeach
+            @foreach (['a', 'c', 'd'] as $batt)
                 @php
                     $key = 'battery_'.$batt;
                     $val = (float) ($latestData?->{$key} ?? 0);
@@ -197,6 +248,9 @@
                     </div>
                 </div>
             @endforeach
+            </div>
+            <div class="row">
+           
 
             @php
                 $plnVoltVal = (float) ($latestData->pln_volt ?? 0);
