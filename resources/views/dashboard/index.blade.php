@@ -657,7 +657,7 @@
                             <label for="charger_threshold_min" class="font-weight-bold">Min Voltage Threshold (Auto Mode)</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="charger_threshold_min" 
-                                       step="0.1" min="10" max="13" placeholder="e.g. 11.0">
+                                       step="0.1" placeholder="e.g. 11.0">
                                 <div class="input-group-append">
                                     <span class="input-group-text">V</span>
                                 </div>
@@ -669,7 +669,7 @@
                             <label for="charger_threshold_max" class="font-weight-bold">Max Voltage Threshold (Auto Mode)</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="charger_threshold_max" 
-                                       step="0.1" min="12" max="14" placeholder="e.g. 13.5">
+                                       step="0.1" placeholder="e.g. 13.5">
                                 <div class="input-group-append">
                                     <span class="input-group-text">V</span>
                                 </div>
@@ -679,10 +679,11 @@
 
                         <div class="alert alert-info" role="alert">
                             <i class="fas fa-info-circle mr-2"></i>
-                            <strong>Tip:</strong> For 12V battery systems, typical settings are:
+                            <strong>Tip:</strong> Sesuaikan dengan jenis baterai yang digunakan:
                             <ul class="mb-0 mt-2">
-                                <li>Min: 11.0V (battery low)</li>
-                                <li>Max: 13.5V (battery fully charged)</li>
+                                <li>Baterai 12V: Min ~11.0V, Max ~13.5V</li>
+                                <li>Baterai 24V: Min ~22.0V, Max ~27.0V</li>
+                                <li>Baterai 48V: Min ~44.0V, Max ~54.0V</li>
                             </ul>
                         </div>
                     </form>

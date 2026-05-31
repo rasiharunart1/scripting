@@ -20,13 +20,13 @@ class DeviceSettingController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'temp1_threshold' => 'nullable|numeric',
-            'temp2_threshold' => 'nullable|numeric',
-            'hysteresis' => 'nullable|numeric',
-            'interval_record' => 'nullable|numeric',
-            'charger_mode' => 'nullable|string|in:manual,auto',
-            'charger_threshold_min' => 'nullable|numeric|min:10|max:13',
-            'charger_threshold_max' => 'nullable|numeric|min:12|max:14',
+            'temp1_threshold'      => 'nullable|numeric',
+            'temp2_threshold'      => 'nullable|numeric',
+            'hysteresis'           => 'nullable|numeric',
+            'interval_record'      => 'nullable|numeric',
+            'charger_mode'         => 'nullable|string|in:manual,auto',
+            'charger_threshold_min' => 'nullable|numeric',
+            'charger_threshold_max' => 'nullable|numeric',
         ]);
 
         $user = Auth::user();

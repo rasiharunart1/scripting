@@ -75,7 +75,7 @@
                             <small class="text-muted font-weight-normal">— Charger ON saat baterai di bawah ini</small>
                         </label>
                         <div class="input-group">
-                            <input type="number" step="0.1" min="10" max="13" name="charger_threshold_min"
+                            <input type="number" step="0.1" name="charger_threshold_min"
                                 value="{{ old('charger_threshold_min', $settings->charger_threshold_min) }}"
                                 class="form-control" placeholder="contoh: 11.0">
                             <div class="input-group-append"><span class="input-group-text">V</span></div>
@@ -88,7 +88,7 @@
                             <small class="text-muted font-weight-normal">— Charger OFF saat baterai mencapai ini</small>
                         </label>
                         <div class="input-group">
-                            <input type="number" step="0.1" min="12" max="14" name="charger_threshold_max"
+                            <input type="number" step="0.1" name="charger_threshold_max"
                                 value="{{ old('charger_threshold_max', $settings->charger_threshold_max) }}"
                                 class="form-control" placeholder="contoh: 13.5">
                             <div class="input-group-append"><span class="input-group-text">V</span></div>
