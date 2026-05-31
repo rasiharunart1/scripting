@@ -43,8 +43,10 @@
 
         $relay1Init = (string) ($latestData->relay_1 ?? '0');
         $relay2Init = (string) ($latestData->relay_2 ?? '0');
+        $relayChargerInit = (string) ($latestData->relay_charger ?? '0');
         $fan1On = $relay1Init === '1' || strtolower($relay1Init) === 'on' || strtolower($relay1Init) === 'true';
         $fan2On = $relay2Init === '1' || strtolower($relay2Init) === 'on' || strtolower($relay2Init) === 'true';
+        $chargerOn = $relayChargerInit === '1' || strtolower($relayChargerInit) === 'on' || strtolower($relayChargerInit) === 'true';
     @endphp
 
     <div class="container-fluid">
@@ -140,6 +142,43 @@
                             </div>
                             <div class="col-auto">
                                 <i id="fan2_icon" class="fas fa-fan fa-2x text-gray-300 {{ $fan2On ? 'fa-spin' : '' }}"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charger Battery A Control -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-start">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Charger Battery A
+                                    <button class="btn btn-sm btn-link" style="padding: 0 4px; margin-left: 8px;" 
+                                            data-toggle="modal" data-target="#chargerSettingsModal" title="Configure Charger">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 mb-3">
+                                    <span id="charger_badge" class="badge {{ $chargerOn ? 'badge-success' : 'badge-secondary' }}">
+                                        {{ $chargerOn ? 'ON' : 'OFF' }}
+                                    </span>
+                                </div>
+                                <div class="text-xs text-gray-500 mb-2">
+                                    <span id="charger_text">{{ $chargerOn ? 'Charging' : 'Stopped' }}</span>
+                                </div>
+                                <div class="text-xs text-muted" id="charger_mode_display">
+                                    Mode: <strong>Manual</strong>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch" style="transform: scale(1.5); transform-origin: top right;">
+                                    <input type="checkbox" class="custom-control-input" id="charger_toggle" 
+                                        {{ $chargerOn ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="charger_toggle"></label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -587,6 +626,79 @@
             </div>
         </div>
     </div>
+
+    <!-- Charger Settings Modal -->
+    <div class="modal fade" id="chargerSettingsModal" tabindex="-1" role="dialog" aria-labelledby="chargerSettingsTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chargerSettingsTitle">
+                        <i class="fas fa-battery-full mr-2 text-warning"></i>Charger Battery A Settings
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="chargerSettingsForm">
+                        <div class="form-group">
+                            <label for="charger_mode_select" class="font-weight-bold">Charger Mode</label>
+                            <select class="form-control" id="charger_mode_select">
+                                <option value="manual">Manual Control</option>
+                                <option value="auto">Auto Control</option>
+                            </select>
+                            <small class="form-text text-muted">
+                                <strong>Manual:</strong> Toggle on/off manually from dashboard<br>
+                                <strong>Auto:</strong> Automatically charge based on battery voltage threshold
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="charger_threshold_min" class="font-weight-bold">Min Voltage Threshold (Auto Mode)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="charger_threshold_min" 
+                                       step="0.1" min="10" max="13" placeholder="e.g. 11.0">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">V</span>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Charger will turn ON when battery voltage drops below this</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="charger_threshold_max" class="font-weight-bold">Max Voltage Threshold (Auto Mode)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="charger_threshold_max" 
+                                       step="0.1" min="12" max="14" placeholder="e.g. 13.5">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">V</span>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Charger will turn OFF when battery voltage reaches this</small>
+                        </div>
+
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>Tip:</strong> For 12V battery systems, typical settings are:
+                            <ul class="mb-0 mt-2">
+                                <li>Min: 11.0V (battery low)</li>
+                                <li>Max: 13.5V (battery fully charged)</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveChargerSettings()">
+                        <i class="fas fa-save mr-1"></i>Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container for Notifications -->
+    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 @endsection
 
 @push('styles')
@@ -673,6 +785,62 @@
         display: inline-block;
         margin-right: 4px;
     }
+
+    /* Charger Toggle Styles */
+    .custom-control-input {
+        cursor: pointer;
+    }
+
+    .custom-switch .custom-control-label {
+        padding-top: 0.25rem;
+    }
+
+    /* Scale up the toggle switch */
+    #charger_toggle {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    #charger_toggle + .custom-control-label {
+        display: block;
+        min-height: 1.75rem;
+    }
+
+    #charger_toggle + .custom-control-label::before {
+        top: 0.25rem;
+        left: -2.5rem;
+        width: 1.5rem;
+        height: 1rem;
+        border-radius: 0.5rem;
+        background-color: #ced4da;
+        border: 1px solid #adb5bd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #charger_toggle + .custom-control-label::after {
+        top: 0.35rem;
+        left: -2.4rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 50%;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    #charger_toggle:checked + .custom-control-label::before {
+        background-color: #28a745;
+        border-color: #1e7e34;
+    }
+
+    #charger_toggle:checked + .custom-control-label::after {
+        transform: translateX(0.5rem);
+        background-color: #fff;
+    }
+
+    #charger_toggle:disabled + .custom-control-label::before {
+        background-color: #e9ecef;
+    }
 </style>
 @endpush
 
@@ -701,6 +869,7 @@
     let activeAlerts = {};
     let updateInterval = null;
     let isUpdating = false;
+    let isToggling = false;      // ← flag anti-race: blokir setChargerUI dari polling saat toggle sedang berjalan
     let consecutiveErrors = 0;
     let alertSound = null;
     let alertsEnabled = true;
@@ -920,6 +1089,21 @@
         }
     }
 
+    function setChargerUI(on, force) {
+        // Jika sedang ada proses toggle & bukan force-update, jangan overwrite
+        if (isToggling && !force) return;
+
+        const badge  = $('#charger_badge');
+        const text   = $('#charger_text');
+        const toggle = $('#charger_toggle');
+
+        badge.removeClass('badge-success badge-secondary');
+        badge.addClass(on ? 'badge-success' : 'badge-secondary');
+        badge.text(on ? 'ON' : 'OFF');
+        text.text(on ? 'Charging' : 'Stopped');
+        toggle.prop('checked', on);
+    }
+
     function updateDashboard() {
         if (isUpdating) return;
 
@@ -960,9 +1144,26 @@
 
                     const fan1On = toOnOff(response.data.relay_1 ?? response.relay_1);
                     const fan2On = toOnOff(response.data.relay_2 ?? response.relay_2);
+                    const chargerOn = toOnOff(response.data.relay_charger ?? response.relay_charger);
                     
                     setFanUI(1, fan1On);
                     setFanUI(2, fan2On);
+                    setChargerUI(chargerOn);  // isToggling dilindungi di dalam setChargerUI
+
+                    // Sinkronisasi mode charger dari realtime
+                    if (response.device_settings && response.device_settings.charger_mode) {
+                        const mode = response.device_settings.charger_mode;
+                        updateChargerModeDisplay(mode);
+                        // Disable toggle jika mode auto (ESP yang kontrol)
+                        const isAuto = (mode === 'auto');
+                        $('#charger_toggle').prop('disabled', isAuto);
+                        if (isAuto) {
+                            $('#charger_toggle').closest('.custom-switch')
+                                .attr('title', 'Mode Auto aktif — ESP yang mengontrol charger');
+                        } else {
+                            $('#charger_toggle').closest('.custom-switch').removeAttr('title');
+                        }
+                    }
 
                     if (response.device_status) {
                         const statusBadge = $('#device_status');
@@ -1184,7 +1385,191 @@
         initAlertSound();
         startUpdates();
         document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Charger toggle event handler — dengan anti-race condition
+        $('#charger_toggle').on('change', function() {
+            if (isToggling) {
+                // Sudah ada request berjalan, batalkan perubahan ini
+                $(this).prop('checked', !$(this).is(':checked'));
+                return;
+            }
+
+            const isChecked  = $(this).is(':checked');
+            const toggle     = $(this);
+
+            // Tandai sedang toggle — polling tidak akan overwrite state
+            isToggling = true;
+            toggle.prop('disabled', true);
+
+            $.ajax({
+                url: '{{ route("dashboard.updateRelay") }}',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Accept': 'application/json'
+                },
+                data: {
+                    relay_type: 'charger',
+                    status: isChecked ? 1 : 0,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        setChargerUI(isChecked, true);  // force update
+                        showSuccessToast('Charger relay berhasil diperbarui');
+                    } else {
+                        // Revert
+                        toggle.prop('checked', !isChecked);
+                        setChargerUI(!isChecked, true);
+                        if (response.charger_mode === 'auto') {
+                            showErrorToast('Mode Auto aktif. Ubah ke Manual di Pengaturan Device.');
+                            toggle.prop('disabled', true);
+                        } else {
+                            showErrorToast(response.error || 'Gagal memperbarui relay.');
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    // Revert toggle ke posisi semula
+                    toggle.prop('checked', !isChecked);
+                    setChargerUI(!isChecked, true);
+                    var msg = 'Gagal memperbarui relay.';
+                    if (xhr.status === 403 && xhr.responseJSON) {
+                        msg = xhr.responseJSON.error || msg;
+                        toggle.prop('disabled', true);
+                    }
+                    showErrorToast(msg);
+                    console.error('Charger toggle error:', xhr.responseJSON);
+                },
+                complete: function() {
+                    isToggling = false;
+                    // Re-enable toggle hanya jika mode manual
+                    // (mode auto sudah disable dari polling)
+                    if (!toggle.prop('disabled') || toggle.prop('disabled') === false) {
+                        toggle.prop('disabled', false);
+                    }
+                }
+            });
+        });
+
+        // Load charger settings when modal opens
+        $('#chargerSettingsModal').on('show.bs.modal', function() {
+            loadChargerSettings();
+        });
     });
+
+    function loadChargerSettings() {
+        const deviceCode = '{{ $device->device_code }}';
+        
+        $.ajax({
+            url: '{{ route('dashboard.realtime') }}',
+            method: 'GET',
+            success: function(response) {
+                if (response.device_settings) {
+                    const settings = response.device_settings;
+                    $('#charger_mode_select').val(settings.charger_mode || 'manual');
+                    $('#charger_threshold_min').val(settings.charger_threshold_min || 11.0);
+                    $('#charger_threshold_max').val(settings.charger_threshold_max || 13.5);
+                    
+                    updateChargerModeDisplay();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to load charger settings:', error);
+            }
+        });
+    }
+
+    function updateChargerModeDisplay(mode) {
+        if (!mode) mode = $('#charger_mode_select').val() || 'manual';
+        var modeText = (mode === 'auto') ? 'Auto' : 'Manual';
+        $('#charger_mode_display').html('Mode: <strong>' + modeText + '</strong>');
+    }
+
+    window.saveChargerSettings = function() {
+        const mode = $('#charger_mode_select').val();
+        const minThreshold = parseFloat($('#charger_threshold_min').val());
+        const maxThreshold = parseFloat($('#charger_threshold_max').val());
+
+        if (isNaN(minThreshold) || isNaN(maxThreshold)) {
+            alert('Please enter valid threshold values');
+            return;
+        }
+
+        if (minThreshold >= maxThreshold) {
+            alert('Minimum threshold must be less than maximum threshold');
+            return;
+        }
+
+        const saveBtn = $('#chargerSettingsModal').find('.btn-primary');
+        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.ajax({
+            url: '{{ route("device_settings.update") }}',
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Accept': 'application/json'
+            },
+            data: {
+                _token: '{{ csrf_token() }}',
+                charger_mode: mode,
+                charger_threshold_min: minThreshold,
+                charger_threshold_max: maxThreshold
+            },
+            success: function(response) {
+                if (response.success) {
+                    updateChargerModeDisplay(mode);
+                    $('#chargerSettingsModal').modal('hide');
+                    showSuccessToast('Charger settings berhasil disimpan.');
+
+                    // Sesuaikan disable toggle dengan mode baru
+                    var isAuto = (mode === 'auto');
+                    $('#charger_toggle').prop('disabled', isAuto);
+                    if (isAuto) {
+                        showSuccessToast('Mode Auto aktif. Charger dikontrol otomatis oleh ESP.');
+                    }
+                } else {
+                    showErrorToast(response.message || 'Gagal menyimpan settings.');
+                }
+            },
+            error: function(xhr) {
+                var msg = 'Gagal menyimpan charger settings.';
+                if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                showErrorToast(msg);
+                console.error('Charger settings error:', xhr.responseJSON);
+            },
+            complete: function() {
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i>Save Settings');
+            }
+        });
+    };
+
+    // Update mode display when mode selection changes
+    $(document).on('change', '#charger_mode_select', function() {
+        updateChargerModeDisplay($(this).val());
+    });
+
+    function showErrorToast(message) {
+        const toastHtml = `
+            <div class="toast" role="alert" data-delay="4000">
+                <div class="toast-header bg-danger text-white">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <strong class="mr-auto">Error</strong>
+                    <button type="button" class="ml-2 close text-white" data-dismiss="toast">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            </div>
+        `;
+        const toast = $(toastHtml);
+        $('#toast-container').append(toast);
+        toast.toast('show');
+        toast.on('hidden.bs.toast', function() { $(this).remove(); });
+    }
 
     $(window).on('beforeunload', function() {
         stopUpdates();

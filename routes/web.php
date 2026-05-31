@@ -16,6 +16,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/realtime', [DashboardController::class, 'getRealtimeData'])->name('dashboard.realtime');
+    Route::post('/dashboard/update-relay', [DashboardController::class, 'updateRelay'])->name('dashboard.updateRelay');
 
     Route::get('/device_settings', [DeviceSettingController::class, 'index'])->name('device_settings.index');
     Route::post('/device_settings/update', [DeviceSettingController::class, 'update'])->name('device_settings.update');

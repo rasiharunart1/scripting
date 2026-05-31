@@ -49,8 +49,10 @@
         // Inisialisasi status fan dari data terakhir
         $relay1Init = (string) ($latestData->relay_1 ?? '0');
         $relay2Init = (string) ($latestData->relay_2 ?? '0');
+        $relayChargerInit = (string) ($latestData->relay_charger ?? '0');
         $fan1On = $relay1Init === '1' || strtolower($relay1Init) === 'on' || strtolower($relay1Init) === 'true';
         $fan2On = $relay2Init === '1' || strtolower($relay2Init) === 'on' || strtolower($relay2Init) === 'true';
+        $chargerOn = $relayChargerInit === '1' || strtolower($relayChargerInit) === 'on' || strtolower($relayChargerInit) === 'true';
     @endphp
 
     <div class="container-fluid">
@@ -145,6 +147,36 @@
                             <div class="col-auto">
                                 <i id="fan2_icon"
                                     class="fas fa-fan fa-2x text-gray-300 {{ $fan2On ? 'fa-spin' : '' }}"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charger Battery A Control -->
+            <div class="col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Charger Battery A
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <span id="charger_badge" class="badge {{ $chargerOn ? 'badge-success' : 'badge-secondary' }}">
+                                        {{ $chargerOn ? 'ON' : 'OFF' }}
+                                    </span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <span id="charger_text">{{ $chargerOn ? 'Charging' : 'Stopped' }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="charger_toggle" 
+                                        {{ $chargerOn ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="charger_toggle"></label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -755,6 +787,20 @@
         else icon.removeClass('fa-spin');
     }
 
+    function setChargerUI(on) {
+        const badge = $('#charger_badge');
+        const text = $('#charger_text');
+        const toggle = $('#charger_toggle');
+
+        badge.removeClass('badge-success badge-secondary');
+        badge.addClass(on ? 'badge-success' : 'badge-secondary');
+        badge.text(on ? 'ON' : 'OFF');
+
+        text.text(on ? 'Charging' : 'Stopped');
+
+        toggle.prop('checked', on);
+    }
+
     function toOnOff(v) {
         if (v === undefined || v === null) return false;
         const s = String(v). trim(). toLowerCase();
@@ -802,8 +848,10 @@
                     // Fans (relay_1, relay_2)
                     const fan1On = toOnOff(response.data. relay_1 ??  response.relay_1);
                     const fan2On = toOnOff(response.data. relay_2 ??  response.relay_2);
+                    const chargerOn = toOnOff(response.data.relay_charger ?? response.relay_charger);
                     setFanUI(1, fan1On);
                     setFanUI(2, fan2On);
+                    setChargerUI(chargerOn);
 
                     // Device status
                     if (response.device_status) {
@@ -845,6 +893,34 @@
         initAlertSound();
         updateDashboard();
         updateInterval = setInterval(updateDashboard, 1000);
+
+        // Charger toggle event handler
+        $('#charger_toggle').on('change', function() {
+            const isChecked = $(this).is(':checked');
+            const deviceCode = '{{ $device->device_code }}';
+            
+            $.ajax({
+                url: '{{ route('dashboard.updateRelay') }}',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    relay_type: 'charger',
+                    status: isChecked ? 1 : 0,
+                    device_code: deviceCode
+                },
+                success: function(response) {
+                    setChargerUI(isChecked);
+                    console.log('Charger relay updated:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to update charger relay:', error);
+                    // Revert toggle on error
+                    $(this).prop('checked', !isChecked);
+                }
+            });
+        });
 
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {

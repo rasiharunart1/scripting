@@ -19,6 +19,7 @@ class SensorDataStill extends Model
         'pln_power',
         'relay_1',
         'relay_2',
+        'relay_charger',
         'timeDevice',
     ];
 
@@ -34,6 +35,7 @@ class SensorDataStill extends Model
         'pln_power' => 'float',
         'relay_1' => 'integer',
         'relay_2' => 'integer',
+        'relay_charger' => 'integer',
         'timeDevice' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

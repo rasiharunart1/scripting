@@ -56,6 +56,7 @@ class SensorController extends Controller
                 'pln_power' => 'nullable',
                 'relay_1' => 'nullable',
                 'relay_2' => 'nullable',
+                'relay_charger' => 'nullable',
                 'timeDevice' => 'nullable|string',
         ]);
 
@@ -79,6 +80,7 @@ class SensorController extends Controller
                 'pln_power' => $request->pln_power,
                 'relay_1' => $request->relay_1,
                 'relay_2' => $request->relay_2,
+                'relay_charger' => $request->relay_charger,
                 'timeDevice' => $request->timeDevice,
                 'temp1_threshold' => $deviceSettings ? $deviceSettings->temp1_threshold : null,
                 'temp2_threshold' => $deviceSettings ? $deviceSettings->temp2_threshold : null,
@@ -231,17 +233,52 @@ public function getSensorData($deviceCode)
                 ->header('Connection', 'close');
         }
 
-        $t1 =$settings->temp1_threshold;
-        $t2 = $settings->temp2_threshold;
+        $t1   = $settings->temp1_threshold;
+        $t2   = $settings->temp2_threshold;
+        $h    = $settings->hysteresis;
+        $mode = $settings->charger_mode ?? 'manual';
+        $min  = $settings->charger_threshold_min ?? 11.0;
+        $max  = $settings->charger_threshold_max ?? 13.5;
 
-        $h = $settings->hysteresis;
-        $body = "{$t1}:{$t2}:{$h}\n";
+        // Get latest relay_charger status
+        $latestSensorData = $device->SensorDataStill()->latest()->first();
+        $relayCharger = $latestSensorData ? ($latestSensorData->relay_charger ?? 0) : 0;
+
+        // Format: temp1:temp2:hysteresis:relay_charger:charger_mode:charger_min:charger_max
+        // Contoh:  35.0:35.0:2.0:0:auto:11.0:13.5
+        $body = "{$t1}:{$t2}:{$h}:{$relayCharger}:{$mode}:{$min}:{$max}\n";
 
         return response($body, 200)
             ->header('Content-Type', 'text/plain; charset=UTF-8')
-            ->header('Content-Length', (string) strlen($body)) ;
-            // bantu client tahu panjang
+            ->header('Content-Length', (string) strlen($body));
     }
+    // <?php
+public function getLatestSensorData($deviceCode)
+{
+    $device = Device::where('device_code', $deviceCode)->first();
+
+    if (!$device) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Device tidak ditemukan',
+        ], 404);
+    }
+
+    $sensorData = $device->SensorDataStill()->latest()->first();
+
+    if (!$sensorData) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data sensor tidak ditemukan',
+        ], 404);
+    }
+
+    return response()->json([
+        'device_code'   => $deviceCode,
+        'battery_a'     => $sensorData->battery_a,
+        'relay_charger' => $sensorData->relay_charger,
+    ]);
+}
     // public function getDeviceSettings($deviceCode){
     //     $device = Device::where('device_code', $deviceCode)->first();
     //     if (!$device) {

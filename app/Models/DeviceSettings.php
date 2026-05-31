@@ -15,6 +15,9 @@ class DeviceSettings extends Model
         'temp2_threshold',
         'hysteresis',
         'interval_record',
+        'charger_mode',
+        'charger_threshold_min',
+        'charger_threshold_max',
     ];
 
     protected $casts = [
@@ -22,6 +25,9 @@ class DeviceSettings extends Model
         'temp2_threshold' => 'float',
         'hysteresis' => 'float',
         'interval_record'=> 'int',
+        'charger_mode' => 'string',
+        'charger_threshold_min' => 'float',
+        'charger_threshold_max' => 'float',
     ];
 
 

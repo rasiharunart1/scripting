@@ -11,6 +11,8 @@ Route::get('/sensor-data/getSensorData/{device_code}', [SensorController::class,
 Route::get('/sensor-data/getData/{device_code}', [SensorController::class, 'getSensorData']);
 Route::get('/sensor-data/getDataAll/{device_code}', [SensorController::class, 'getSensorDataAll']);
 Route::get('/sensor-data/range/{device_code}', [SensorController::class, 'getRangeSensor']);
+// <?php
+Route::get('/sensor-data/latest/{device_code}', [SensorController::class, 'getLatestSensorData']);
 // Route::post('/settings/', [SensorController::class, 'getDeviceSettings']);
 
 Route::fallback(function(){

@@ -60,7 +60,9 @@ class Device extends Model
 
     public function getLatestSensorData()
     {
-        return $this->sensorDataStill()->latest()->first();
+        // Pakai latest('updated_at') bukan latest() (yg default created_at)
+        // karena ESP pakai updateOrCreate → hanya updated_at yg berubah tiap POST
+        return $this->sensorDataStill()->latest('updated_at')->first();
     }
     public function getLatestServerSensorData()
     {
