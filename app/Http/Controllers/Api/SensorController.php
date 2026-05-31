@@ -140,6 +140,87 @@ class SensorController extends Controller
             'data' => $shouldCreateHistory ? $sensorData : null
         ], 201);
     }
+
+    /**
+     * Endpoint khusus untuk charger control device.
+     * Hanya update relay_charger (dan battery_a opsional) — tidak overwrite field sensor lain.
+     * POST /api/charger-relay
+     */
+    public function updateChargerRelay(Request $request)
+    {
+        $request->validate([
+            'device_code'   => 'required|string|exists:devices,device_code',
+            'relay_charger' => 'required|integer|in:0,1',
+            'battery_a'     => 'nullable|numeric',
+            'timeDevice'    => 'nullable|string',
+        ]);
+
+        $device = Device::where('device_code', $request->device_code)->first();
+        if (!$device) {
+            return response()->json(['message' => 'Device not found'], 404);
+        }
+
+        // Hanya update kolom relay_charger (dan battery_a jika dikirim)
+        // Gunakan updateOrCreate agar tidak perlu ada record dulu
+        $updateData = [
+            'relay_charger' => $request->relay_charger,
+        ];
+
+        if ($request->has('battery_a') && $request->battery_a !== null) {
+            $updateData['battery_a'] = $request->battery_a;
+        }
+
+        $still = SensorDataStill::updateOrCreate(
+            ['device_id' => $device->id],
+            $updateData
+        );
+
+        // Simpan ke history logs juga (jika ada interval_record)
+        $deviceSettings = $device->deviceSettings;
+        if ($deviceSettings && $deviceSettings->interval_record) {
+            $interval = (int) $deviceSettings->interval_record;
+            $now      = Carbon::now();
+
+            $updated = Device::where('id', $device->id)
+                ->where(function ($q) use ($interval, $now) {
+                    $q->whereNull('last_history_at')
+                      ->orWhere('last_history_at', '<=', $now->copy()->subSeconds($interval));
+                })
+                ->update(['last_history_at' => $now]);
+
+            if ($updated) {
+                // Ambil semua data terkini dari sensor_data_stills untuk history
+                $latestStill = SensorDataStill::where('device_id', $device->id)->first();
+                if ($latestStill) {
+                    SensorData::create([
+                        'device_id'      => $device->id,
+                        'battery_a'      => $latestStill->battery_a,
+                        'battery_b'      => $latestStill->battery_b,
+                        'battery_c'      => $latestStill->battery_c,
+                        'battery_d'      => $latestStill->battery_d,
+                        'temperature_1'  => $latestStill->temperature_1,
+                        'temperature_2'  => $latestStill->temperature_2,
+                        'pln_volt'       => $latestStill->pln_volt,
+                        'pln_current'    => $latestStill->pln_current,
+                        'pln_power'      => $latestStill->pln_power,
+                        'relay_1'        => $latestStill->relay_1,
+                        'relay_2'        => $latestStill->relay_2,
+                        'relay_charger'  => $request->relay_charger,  // pakai nilai terbaru
+                        'timeDevice'     => $request->timeDevice,
+                        'temp1_threshold' => $deviceSettings->temp1_threshold,
+                        'temp2_threshold' => $deviceSettings->temp2_threshold,
+                        'hysteresis'     => $deviceSettings->hysteresis,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json([
+            'success'       => true,
+            'relay_charger' => $request->relay_charger,
+            'message'       => 'Charger relay updated',
+        ], 200);
+    }
 public function getSensorData($deviceCode)
 {
         $device = Device::where('device_code', $deviceCode)->first();

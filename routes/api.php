@@ -15,6 +15,9 @@ Route::get('/sensor-data/range/{device_code}', [SensorController::class, 'getRan
 Route::get('/sensor-data/latest/{device_code}', [SensorController::class, 'getLatestSensorData']);
 // Route::post('/settings/', [SensorController::class, 'getDeviceSettings']);
 
+// Endpoint khusus charger control device — hanya update relay_charger, tidak overwrite data sensor lain
+Route::post('/charger-relay', [SensorController::class, 'updateChargerRelay']);
+
 Route::fallback(function(){
     abort(404);
 });
