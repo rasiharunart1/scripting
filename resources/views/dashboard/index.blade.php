@@ -211,7 +211,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold {{ $isAlert ? 'text-danger' : 'text-primary' }} text-uppercase mb-1">
-                                        Charger Battery A
+                                        Adaptor Direct
                                         <i class="fas fa-exclamation-triangle alert-icon {{ $isAlert ? '' : 'd-none' }}"></i>
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold {{ $isAlert ? 'sensor-value-danger' : 'text-gray-800' }}" id="battery_{{ $batt }}">
