@@ -168,7 +168,7 @@
                 {{ Auth::user()->name ?? 'User' }}
             </div>
             <div style="font-size:.65rem;color:rgba(147,197,253,0.7);letter-spacing:.5px;text-transform:uppercase;">
-                {{ Auth::user()->role ?? 'Operator' }}
+                {{ ucfirst(Auth::user()->role ?? 'user') }}
             </div>
         </div>
         <div style="

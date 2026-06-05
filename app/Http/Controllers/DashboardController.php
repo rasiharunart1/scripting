@@ -26,7 +26,13 @@ class DashboardController extends Controller
             $latestData = $device->getLatestSensorData();
             $latestServerData = $device->getLatestServerSensorData();
 
-            return view('dashboard.index', compact('device', 'latestData', 'latestServerData'));
+            // Admin → dashboard lengkap dengan kontrol
+            // User  → dashboard monitoring (read-only)
+            if ($user->isAdmin()) {
+                return view('dashboard.index', compact('device', 'latestData', 'latestServerData'));
+            }
+
+            return view('dashboard.dash', compact('device', 'latestData'));
             
         } catch (\Exception $e) {
             Log::error('Dashboard index error: ' . $e->getMessage(), [

@@ -14,31 +14,38 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Dashboard — semua role (view berbeda di controller berdasarkan role)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/realtime', [DashboardController::class, 'getRealtimeData'])->name('dashboard.realtime');
-    Route::post('/dashboard/update-relay', [DashboardController::class, 'updateRelay'])->name('dashboard.updateRelay');
 
-    Route::get('/device_settings', [DeviceSettingController::class, 'index'])->name('device_settings.index');
-    Route::post('/device_settings/update', [DeviceSettingController::class, 'update'])->name('device_settings.update');
-    Route::get('/device_settings/{deviceCode}', [DeviceSettingController::class, 'show'])->name('device_settings.show');
-
-
-    Route::get('/logs', [LogsController::class, 'index'])->name('logs.index');
-    Route::get('/logs/export', [LogsController::class, 'export'])->name('logs.export');
-    Route::get('logs/export-all/{device}', [LogsController::class, 'exportAll'])->name('logs.exportAll');
-    Route::delete('/logs', [LogsController::class, 'destroy'])->name('logs.destroy');
-    Route::delete('/logs/destroy-all', [LogsController::class, 'destroyAll'])->name('logs.destroyAll');
-    
+    // Profile — semua role
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    
-     Route::get('/sensor-ranges', [SensorRangeController::class, 'index'])->name('sensor-ranges.index');
-    Route::post('/sensor-ranges', [SensorRangeController::class, 'store'])->name('sensor-ranges.store');
-    Route::post('/sensor-ranges/bulk', [SensorRangeController::class, 'bulkStore'])->name('sensor-ranges.bulk');
-    Route::delete('/sensor-ranges', [SensorRangeController::class, 'destroy'])->name('sensor-ranges.destroy');
 
+    // ─── Admin Only ─────────────────────────────────────────────
+    Route::middleware('role:admin')->group(function () {
+        // Dashboard controls (charger toggle)
+        Route::post('/dashboard/update-relay', [DashboardController::class, 'updateRelay'])->name('dashboard.updateRelay');
+
+        // Device Settings
+        Route::get('/device_settings', [DeviceSettingController::class, 'index'])->name('device_settings.index');
+        Route::post('/device_settings/update', [DeviceSettingController::class, 'update'])->name('device_settings.update');
+        Route::get('/device_settings/{deviceCode}', [DeviceSettingController::class, 'show'])->name('device_settings.show');
+
+        // Logs
+        Route::get('/logs', [LogsController::class, 'index'])->name('logs.index');
+        Route::get('/logs/export', [LogsController::class, 'export'])->name('logs.export');
+        Route::get('logs/export-all/{device}', [LogsController::class, 'exportAll'])->name('logs.exportAll');
+        Route::delete('/logs', [LogsController::class, 'destroy'])->name('logs.destroy');
+        Route::delete('/logs/destroy-all', [LogsController::class, 'destroyAll'])->name('logs.destroyAll');
+
+        // Sensor Ranges
+        Route::get('/sensor-ranges', [SensorRangeController::class, 'index'])->name('sensor-ranges.index');
+        Route::post('/sensor-ranges', [SensorRangeController::class, 'store'])->name('sensor-ranges.store');
+        Route::post('/sensor-ranges/bulk', [SensorRangeController::class, 'bulkStore'])->name('sensor-ranges.bulk');
+        Route::delete('/sensor-ranges', [SensorRangeController::class, 'destroy'])->name('sensor-ranges.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

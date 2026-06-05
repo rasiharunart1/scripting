@@ -15,6 +15,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     protected $hidden = [
@@ -27,11 +28,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
     public function device(): HasOne
     {
         return $this->hasOne(Device::class);
     }
-    public function sensorRanges(){
+
+    public function sensorRanges()
+    {
         return $this->hasMany(SensorRange::class);
     }
 }

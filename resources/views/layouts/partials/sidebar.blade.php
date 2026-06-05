@@ -19,7 +19,8 @@
         </a>
     </li>
 
-    <!-- Nav Item - Device -->
+    @if(Auth::user()->isAdmin())
+    <!-- Nav Item - Device (Admin Only) -->
     <li class="nav-item {{ request()->is('device-settings*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('device_settings.index') }}">
             <i class="fas fa-fw fa-microchip"></i>
@@ -27,13 +28,14 @@
         </a>
     </li>
 
-    <!-- Nav Item - Log -->
+    <!-- Nav Item - Log (Admin Only) -->
     <li class="nav-item {{ request()->is('logs*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('logs.index') }}">
             <i class="fas fa-fw fa-list"></i>
             <span>Log</span>
         </a>
     </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider">
