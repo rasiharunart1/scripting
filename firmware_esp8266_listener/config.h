@@ -14,10 +14,10 @@
 
 // ─────────────────────────────────────────────
 //  Laravel API
-//  Production  : "https://mdpower.io"
+//  Production  : "https://nhmedia.pro"
 //  Development : "http://192.168.1.xx"  (ganti IP laptop)
 // ─────────────────────────────────────────────
-#define LARAVEL_BASE_URL  "https://mdpower.io"
+#define LARAVEL_BASE_URL  "https://nhmedia.pro"
 #define DEVICE_CODE       "MDUnit-2BC1C478"
 
 // ─────────────────────────────────────────────
