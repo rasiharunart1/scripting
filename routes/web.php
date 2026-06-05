@@ -23,22 +23,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Device Settings — semua role
+    Route::get('/device_settings', [DeviceSettingController::class, 'index'])->name('device_settings.index');
+    Route::post('/device_settings/update', [DeviceSettingController::class, 'update'])->name('device_settings.update');
+    Route::get('/device_settings/{deviceCode}', [DeviceSettingController::class, 'show'])->name('device_settings.show');
+
+    // Logs — semua role
+    Route::get('/logs', [LogsController::class, 'index'])->name('logs.index');
+    Route::get('/logs/export', [LogsController::class, 'export'])->name('logs.export');
+    Route::get('logs/export-all/{device}', [LogsController::class, 'exportAll'])->name('logs.exportAll');
+    Route::delete('/logs', [LogsController::class, 'destroy'])->name('logs.destroy');
+    Route::delete('/logs/destroy-all', [LogsController::class, 'destroyAll'])->name('logs.destroyAll');
+
     // ─── Admin Only ─────────────────────────────────────────────
     Route::middleware('role:admin')->group(function () {
         // Dashboard controls (charger toggle)
         Route::post('/dashboard/update-relay', [DashboardController::class, 'updateRelay'])->name('dashboard.updateRelay');
-
-        // Device Settings
-        Route::get('/device_settings', [DeviceSettingController::class, 'index'])->name('device_settings.index');
-        Route::post('/device_settings/update', [DeviceSettingController::class, 'update'])->name('device_settings.update');
-        Route::get('/device_settings/{deviceCode}', [DeviceSettingController::class, 'show'])->name('device_settings.show');
-
-        // Logs
-        Route::get('/logs', [LogsController::class, 'index'])->name('logs.index');
-        Route::get('/logs/export', [LogsController::class, 'export'])->name('logs.export');
-        Route::get('logs/export-all/{device}', [LogsController::class, 'exportAll'])->name('logs.exportAll');
-        Route::delete('/logs', [LogsController::class, 'destroy'])->name('logs.destroy');
-        Route::delete('/logs/destroy-all', [LogsController::class, 'destroyAll'])->name('logs.destroyAll');
 
         // Sensor Ranges
         Route::get('/sensor-ranges', [SensorRangeController::class, 'index'])->name('sensor-ranges.index');
