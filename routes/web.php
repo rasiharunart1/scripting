@@ -35,16 +35,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/logs', [LogsController::class, 'destroy'])->name('logs.destroy');
     Route::delete('/logs/destroy-all', [LogsController::class, 'destroyAll'])->name('logs.destroyAll');
 
+    // Sensor Ranges — semua role (per-user, tersimpan per user_id di DB)
+    Route::get('/sensor-ranges', [SensorRangeController::class, 'index'])->name('sensor-ranges.index');
+    Route::post('/sensor-ranges', [SensorRangeController::class, 'store'])->name('sensor-ranges.store');
+    Route::post('/sensor-ranges/bulk', [SensorRangeController::class, 'bulkStore'])->name('sensor-ranges.bulk');
+    Route::delete('/sensor-ranges', [SensorRangeController::class, 'destroy'])->name('sensor-ranges.destroy');
+
     // ─── Admin Only ─────────────────────────────────────────────
     Route::middleware('role:admin')->group(function () {
         // Dashboard controls (charger toggle)
         Route::post('/dashboard/update-relay', [DashboardController::class, 'updateRelay'])->name('dashboard.updateRelay');
-
-        // Sensor Ranges
-        Route::get('/sensor-ranges', [SensorRangeController::class, 'index'])->name('sensor-ranges.index');
-        Route::post('/sensor-ranges', [SensorRangeController::class, 'store'])->name('sensor-ranges.store');
-        Route::post('/sensor-ranges/bulk', [SensorRangeController::class, 'bulkStore'])->name('sensor-ranges.bulk');
-        Route::delete('/sensor-ranges', [SensorRangeController::class, 'destroy'])->name('sensor-ranges.destroy');
     });
 });
 

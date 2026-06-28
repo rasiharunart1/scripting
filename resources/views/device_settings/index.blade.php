@@ -46,6 +46,7 @@
                 </div>
             </div>
 
+            @if(Auth::user()->isAdmin())
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-warning">
@@ -101,6 +102,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <button type="submit" class="btn btn-primary" id="save-btn">
                 <i class="fas fa-save mr-1"></i> Simpan Pengaturan
@@ -118,18 +120,20 @@
             var temp2          = $('input[name="temp2_threshold"]').val();
             var hysteresis     = $('input[name="hysteresis"]').val();
             var intervalRecord = $('input[name="interval_record"]').val();
-            var chargerMin     = parseFloat($('input[name="charger_threshold_min"]').val());
-            var chargerMax     = parseFloat($('input[name="charger_threshold_max"]').val());
 
             if (!temp1 || !temp2 || !hysteresis || !intervalRecord) {
                 showAlert('danger', 'Threshold suhu, hysteresis, dan interval record harus diisi.');
                 return false;
             }
 
+            @if(Auth::user()->isAdmin())
+            var chargerMin = parseFloat($('input[name="charger_threshold_min"]').val());
+            var chargerMax = parseFloat($('input[name="charger_threshold_max"]').val());
             if (!isNaN(chargerMin) && !isNaN(chargerMax) && chargerMin >= chargerMax) {
                 showAlert('danger', 'Batas tegangan minimum harus lebih kecil dari maksimum.');
                 return false;
             }
+            @endif
 
             var saveBtn = $('#save-btn');
             saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Menyimpan...');
