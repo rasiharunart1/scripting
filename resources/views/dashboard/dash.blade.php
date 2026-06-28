@@ -168,31 +168,31 @@
             </div>
 
             <!-- Charger Status (Read-Only — no toggle for user role) -->
-            <div class="col-md-4 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Charger Battery A
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <span id="charger_badge"
-                                        class="badge {{ $chargerOn ? 'badge-success' : 'badge-secondary' }}">
-                                        {{ $chargerOn ? 'ON' : 'OFF' }}
-                                    </span>
-                                </div>
-                                <div class="text-xs text-gray-500 mt-1">
-                                    <span id="charger_text">{{ $chargerOn ? 'Charging' : 'Stopped' }}</span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-charging-station fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="col-md-4 mb-4">-->
+            <!--    <div class="card border-left-warning shadow h-100 py-2">-->
+            <!--        <div class="card-body">-->
+            <!--            <div class="row no-gutters align-items-center">-->
+            <!--                <div class="col">-->
+            <!--                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">-->
+            <!--                        Charger Battery A-->
+            <!--                    </div>-->
+            <!--                    <div class="h5 mb-0 font-weight-bold text-gray-800">-->
+            <!--                        <span id="charger_badge"-->
+            <!--                            class="badge {{ $chargerOn ? 'badge-success' : 'badge-secondary' }}">-->
+            <!--                            {{ $chargerOn ? 'ON' : 'OFF' }}-->
+            <!--                        </span>-->
+            <!--                    </div>-->
+            <!--                    <div class="text-xs text-gray-500 mt-1">-->
+            <!--                        <span id="charger_text">{{ $chargerOn ? 'Charging' : 'Stopped' }}</span>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div class="col-auto">-->
+            <!--                    <i class="fas fa-charging-station fa-2x text-gray-300"></i>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
         </div>
 
         <!-- ═══════ Row 3: Battery A, B, C, D ═══════ -->

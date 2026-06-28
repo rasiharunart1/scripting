@@ -56,7 +56,7 @@ class SensorController extends Controller
                 'pln_power' => 'nullable',
                 'relay_1' => 'nullable',
                 'relay_2' => 'nullable',
-                'relay_charger' => 'nullable',
+                // 'relay_charger' => 'nullable',
                 'timeDevice' => 'nullable|string',
         ]);
 
@@ -80,7 +80,7 @@ class SensorController extends Controller
                 'pln_power' => $request->pln_power,
                 'relay_1' => $request->relay_1,
                 'relay_2' => $request->relay_2,
-                'relay_charger' => $request->relay_charger,
+                // 'relay_charger' => $request->relay_charger,
                 'timeDevice' => $request->timeDevice,
                 'temp1_threshold' => $deviceSettings ? $deviceSettings->temp1_threshold : null,
                 'temp2_threshold' => $deviceSettings ? $deviceSettings->temp2_threshold : null,
